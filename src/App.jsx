@@ -96,6 +96,23 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (blog) => {
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      } catch (error) {
+        setErrorMessage({
+          text: error.response.data.error,
+          type: 'error'
+        })
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -137,7 +154,7 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Toggable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} user={user} />
       )}
     </div>
   )
