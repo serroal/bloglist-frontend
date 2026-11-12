@@ -13,10 +13,13 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
 
+  const compareLikes = (a, b) => b.likes - a.likes 
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService.getAll().then(blogs => {
+      const sortedBlogs = blogs.sort(compareLikes)
+      setBlogs( sortedBlogs )
+    })  
   }, [])
 
   useEffect(() => {
@@ -81,7 +84,7 @@ const App = () => {
   const updateBlog = async (id, blog) => {
     try {
       const updatedBlog = await blogService.update(id, blog)
-      setBlogs(blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog))
+      setBlogs(blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog).sort(compareLikes))
     } catch (error) {
       setErrorMessage({
         text: error.response.data.error,
