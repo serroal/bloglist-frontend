@@ -13,13 +13,13 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
 
-  const compareLikes = (a, b) => b.likes - a.likes 
+  const compareLikes = (a, b) => b.likes - a.likes
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
       const sortedBlogs = blogs.sort(compareLikes)
       setBlogs( sortedBlogs )
-    })  
+    })
   }, [])
 
   useEffect(() => {
