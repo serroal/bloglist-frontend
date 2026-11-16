@@ -19,7 +19,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const handleDelete = () => deleteBlog(blog)
 
   return (
-    <div className='blog'>
+    <div className='blog' data-testid='blog-item'>
       <div>
         <span className='blogTitle'>{blog.title}</span> <span className='blogAuthor'>{blog.author}</span> {' '}
         <button onClick={() => setBlogVisible(!blogVisible)}>{blogVisible ? 'hide' : 'show'}</button>
