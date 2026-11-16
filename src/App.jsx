@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,6 +12,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
+  const blogFormRef = useRef()
 
   const compareLikes = (a, b) => b.likes - a.likes
 
@@ -61,6 +62,7 @@ const App = () => {
 
   const addBlog = async (newBlog) => {
     try {
+      blogFormRef.current.toggleVisibility()
       const createdBlog = await blogService.create(newBlog)
       setErrorMessage({
         text: `a new blog ${createdBlog.title} by ${createdBlog.author} added`,
@@ -150,7 +152,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={errorMessage} />
       <p>{user.name} logged in <button type='button' onClick={handleLogout}>logout</button></p>
-      <Toggable buttonLabel="create new blog">
+      <Toggable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Toggable>
       {blogs.map(blog =>
