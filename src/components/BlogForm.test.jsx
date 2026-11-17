@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react'
+import { BrowserRouter as Router } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
+
 import BlogForm from './BlogForm'
 
 describe('<BlogForm />', () => {
@@ -7,7 +9,7 @@ describe('<BlogForm />', () => {
     const user = userEvent.setup()
     const createBlog = vi.fn()
 
-    render(<BlogForm createBlog={createBlog} />)
+    render(<Router><BlogForm createBlog={createBlog} /></Router>)
 
     const titleInput = screen.getByLabelText('title:')
     const authorInput = screen.getByLabelText('author:')

@@ -26,9 +26,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
   return (
     <div data-testid='blog-item'>
-      <h3>
-        <span className='blogAuthor'>{blog.author}</span>: <span className='blogTitle'>{blog.title}</span>
-      </h3>
+      <h3>{blog.author}: {blog.title}</h3>
       <div><a href={blog.url} target='_blank'>{blog.url}</a></div>
       <div>likes {blog.likes} {user && <button onClick={handleLike}>like</button>}</div>
       <div>{blog.user ? `Added by ${blog.user.name}` : ''}</div>
