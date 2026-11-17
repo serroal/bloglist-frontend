@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useState, useEffect } from 'react'
+import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
-import Toggable from './components/Toggable'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
+import BlogList from './components/BlogList'
+import Blog from './components/Blog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,7 +14,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
-  const blogFormRef = useRef()
+  const navigate = useNavigate()
 
   const compareLikes = (a, b) => b.likes - a.likes
 
@@ -43,6 +45,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      navigate('/')
     } catch {
       setErrorMessage({
         text: 'wrong username or password',
@@ -58,11 +61,11 @@ const App = () => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.clear()
+    navigate('/')
   }
 
   const addBlog = async (newBlog) => {
     try {
-      blogFormRef.current.toggleVisibility()
       const createdBlog = await blogService.create(newBlog)
       setErrorMessage({
         text: `a new blog ${createdBlog.title} by ${createdBlog.author} added`,
@@ -115,49 +118,46 @@ const App = () => {
     }
   }
 
-  if (user === null) {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <Notification message={errorMessage} />
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-              username
-              <input
-                type="text"
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input
-                type="password"
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    )
+  const padding = {
+    padding: 5
   }
+
+  const match = useMatch('/blogs/:id')
+  const blog = match
+    ? blogs.find(blog => blog.id === match.params.id)
+    : null
 
   return (
     <div>
-      <h2>blogs</h2>
+      <div>
+        <Link style={padding} to="/">blogs</Link>
+        {user && <Link style={padding} to="/create">new blog</Link>}
+        {user ?
+          <button type='button' onClick={handleLogout}>logout</button>
+          :
+          <Link style={padding} to="/login">login</Link>}
+      </div>
       <Notification message={errorMessage} />
-      <p>{user.name} logged in <button type='button' onClick={handleLogout}>logout</button></p>
-      <Toggable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
-      </Toggable>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} user={user} />
-      )}
+      <Routes>
+        <Route path="/login" element={
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleLogin={handleLogin}
+          />
+        } />
+        <Route path="/create" element={
+          <BlogForm createBlog={addBlog} />
+        } />
+        <Route path="/blogs/:id" element={
+          <Blog blog={blog} deleteBlog={deleteBlog} updateBlog={updateBlog} user={user} />
+        } />
+        <Route path="/" element={
+          <BlogList blogs={blogs} />
+        } />
+      </Routes>
     </div>
   )
 }

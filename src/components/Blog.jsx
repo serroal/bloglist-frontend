@@ -1,9 +1,8 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
-  const [blogVisible, setBlogVisible] = useState(false)
 
-  const showWhenVisible = { display: blogVisible ? '' : 'none' }
+  const navigate = useNavigate()
 
   const handleLike = () => {
     const newBlog = {
@@ -16,20 +15,24 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     updateBlog(blog.id, newBlog)
   }
 
-  const handleDelete = () => deleteBlog(blog)
+  const handleDelete = () => {
+    deleteBlog(blog)
+    navigate('/')
+  }
+
+  if(!blog) {
+    return null
+  }
 
   return (
-    <div className='blog' data-testid='blog-item'>
-      <div>
-        <span className='blogTitle'>{blog.title}</span> <span className='blogAuthor'>{blog.author}</span> {' '}
-        <button onClick={() => setBlogVisible(!blogVisible)}>{blogVisible ? 'hide' : 'show'}</button>
-      </div>
-      <div style={showWhenVisible}>
-        <div>{blog.url}</div>
-        <div>likes {blog.likes} <button onClick={handleLike}>like</button></div>
-        <div>{blog.user ? blog.user.name : ''}</div>
-        {blog.user && user.username === blog.user.username && <div><button onClick={handleDelete}>remove</button></div>}
-      </div>
+    <div data-testid='blog-item'>
+      <h3>
+        <span className='blogAuthor'>{blog.author}</span>: <span className='blogTitle'>{blog.title}</span>
+      </h3>
+      <div><a href={blog.url} target='_blank'>{blog.url}</a></div>
+      <div>likes {blog.likes} {user && <button onClick={handleLike}>like</button>}</div>
+      <div>{blog.user ? `Added by ${blog.user.name}` : ''}</div>
+      {blog.user && user && user.username === blog.user.username && <div><button onClick={handleDelete}>remove</button></div>}
     </div>
   )
 }
