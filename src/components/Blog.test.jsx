@@ -17,8 +17,11 @@ describe('<Blog />', () => {
   test('Blog information and the number of likes are displayed to unauthenticated users, buttons are not displayed', () => {
     render(<Router><Blog blog={blog} user={null} /></Router>)
 
-    const titleElement = screen.getByText(`${blog.author}: ${blog.title}`)
+    const titleElement = screen.getByText(blog.title)
     expect(titleElement).toBeDefined()
+
+    const authorElement = screen.getByText(`by ${blog.author}`)
+    expect(authorElement).toBeDefined()
 
     const urlElement = screen.getByText(blog.url)
     expect(urlElement).toBeDefined()
@@ -38,8 +41,11 @@ describe('<Blog />', () => {
   test('Authenticated users who are not the blog\'s creator are shown only the like button', () => {
     render(<Router><Blog blog={blog} user={{ username: 'testuser' }} /></Router>)
 
-    const titleElement = screen.getByText(`${blog.author}: ${blog.title}`)
+    const titleElement = screen.getByText(blog.title)
     expect(titleElement).toBeDefined()
+
+    const authorElement = screen.getByText(`by ${blog.author}`)
+    expect(authorElement).toBeDefined()
 
     const urlElement = screen.getByText(blog.url)
     expect(urlElement).toBeDefined()
@@ -59,8 +65,11 @@ describe('<Blog />', () => {
   test('The blog\'s creator is also shown the delete button', () => {
     render(<Router><Blog blog={blog} user={{ username: 'usercreator' }} /></Router>)
 
-    const titleElement = screen.getByText(`${blog.author}: ${blog.title}`)
+    const titleElement = screen.getByText(blog.title)
     expect(titleElement).toBeDefined()
+
+    const authorElement = screen.getByText(`by ${blog.author}`)
+    expect(authorElement).toBeDefined()
 
     const urlElement = screen.getByText(blog.url)
     expect(urlElement).toBeDefined()

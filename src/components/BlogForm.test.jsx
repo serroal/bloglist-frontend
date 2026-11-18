@@ -11,9 +11,9 @@ describe('<BlogForm />', () => {
 
     render(<Router><BlogForm createBlog={createBlog} /></Router>)
 
-    const titleInput = screen.getByLabelText('title:')
-    const authorInput = screen.getByLabelText('author:')
-    const urlInput = screen.getByLabelText('url:')
+    const titleInput = screen.getByLabelText('title')
+    const authorInput = screen.getByLabelText('author')
+    const urlInput = screen.getByLabelText('url')
     const sendButton = screen.getByText('create')
 
     await user.type(titleInput, 'test title')
