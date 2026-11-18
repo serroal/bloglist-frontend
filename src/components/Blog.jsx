@@ -32,7 +32,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
       <Typography variant='body1' gutterBottom><Link href={blog.url} target='_blank'>{blog.url}</Link></Typography>
       <Typography variant='body2' color='textSecondary' gutterBottom>{blog.user ? `Added by ${blog.user.name}` : ''}</Typography>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mt: 1 }}>
-        <Typography variant='body1'>{blog.likes} likes</Typography>
+        <Typography variant='body1'><span data-testid="likes">{blog.likes}</span> likes</Typography>
         {user && <Button onClick={handleLike} variant="outlined">like</Button>}
         {blog.user && user && user.username === blog.user.username &&
         <Button onClick={handleDelete} variant="outlined" color="error">remove</Button>}
