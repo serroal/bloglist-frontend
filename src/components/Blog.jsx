@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { Link, Button, Box, Stack, Typography } from '@mui/material'
 
 const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
@@ -25,13 +26,18 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   }
 
   return (
-    <div data-testid='blog-item'>
-      <h3>{blog.author}: {blog.title}</h3>
-      <div><a href={blog.url} target='_blank'>{blog.url}</a></div>
-      <div>likes {blog.likes} {user && <button onClick={handleLike}>like</button>}</div>
-      <div>{blog.user ? `Added by ${blog.user.name}` : ''}</div>
-      {blog.user && user && user.username === blog.user.username && <div><button onClick={handleDelete}>remove</button></div>}
-    </div>
+    <Box component="section" sx={{ p: 3, mt: 3, border: '1px solid silver', boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)', borderRadius: 1, }}>
+      <Typography variant='h4' component='h3' gutterBottom>{blog.title}</Typography>
+      <Typography variant='h6' color='textSecondary' gutterBottom>by {blog.author}</Typography>
+      <Typography variant='body1' gutterBottom><Link href={blog.url} target='_blank'>{blog.url}</Link></Typography>
+      <Typography variant='body2' color='textSecondary' gutterBottom>{blog.user ? `Added by ${blog.user.name}` : ''}</Typography>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mt: 1 }}>
+        <Typography variant='body1'>{blog.likes} likes</Typography>
+        {user && <Button onClick={handleLike} variant="outlined">like</Button>}
+        {blog.user && user && user.username === blog.user.username &&
+        <Button onClick={handleDelete} variant="outlined" color="error">remove</Button>}
+      </Stack>
+    </Box>
   )
 }
 

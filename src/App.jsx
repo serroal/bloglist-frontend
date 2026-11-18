@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
@@ -118,25 +119,26 @@ const App = () => {
     }
   }
 
-  const padding = {
-    padding: 5
-  }
-
   const match = useMatch('/blogs/:id')
   const blog = match
     ? blogs.find(blog => blog.id === match.params.id)
     : null
 
   return (
-    <div>
-      <div>
-        <Link style={padding} to="/">blogs</Link>
-        {user && <Link style={padding} to="/create">new blog</Link>}
-        {user ?
-          <button type='button' onClick={handleLogout}>logout</button>
-          :
-          <Link style={padding} to="/login">login</Link>}
-      </div>
+    <Container>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+            Blog App
+          </Typography>
+          <Button color="inherit" component={Link} to="/">blogs</Button>
+          {user && <Button color="inherit" component={Link} to="/create">new blog</Button>}
+          {user ?
+            <Button color="inherit" onClick={handleLogout}>logout</Button>
+            :
+            <Button color="inherit" component={Link} to="/login">login</Button>}
+        </Toolbar>
+      </AppBar>
       <Notification message={errorMessage} />
       <Routes>
         <Route path="/login" element={
@@ -158,7 +160,7 @@ const App = () => {
           <BlogList blogs={blogs} />
         } />
       </Routes>
-    </div>
+    </Container>
   )
 }
 
